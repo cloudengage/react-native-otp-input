@@ -51,9 +51,9 @@ export default class OTPInputView extends Component<InputProps, OTPInputViewStat
 
     componentDidUpdate (prevProps, prevState) {
         if (prevState.text !== this.state.text) {
-            const { pinCount } = this.props;
-            const text = this.state.text;
-            const index = text.length - 1;
+            const { pinCount } = this.props
+            const text = this.state.text
+            const index = text.length - 1
             if (text.length === pinCount) {
                 this.handleChangeText(index, text)
             }
