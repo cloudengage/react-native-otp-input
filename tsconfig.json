@@ -26,8 +26,12 @@
     "resolveJsonModule": true,
     "noFallthroughCasesInSwitch": true,
     "strictPropertyInitialization": false,
-    "lib": ["es6"],
-    "typeRoots": ["./node_modules/@types"]
+    "lib": [
+      "es6"
+    ],
+    "typeRoots": [
+      "./node_modules/@types"
+    ]
   },
   "exclude": [
     "node_modules",
@@ -35,7 +39,7 @@
     "jest.config.js"
   ],
   "include": [
-    "./index.tsx",
+    "index.js",
     "./styles.ts",
     "./index.d.ts"
   ],
