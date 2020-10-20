@@ -32,23 +32,35 @@ export default class OTPInputView extends Component<InputProps, OTPInputViewStat
         this.state = {
             digits: codeToArray(code),
             selectedIndex: props.autoFocusOnLoad ? 0 : -1,
+            text: ""
         }
     }
 
-    UNSAFE_componentWillReceiveProps(nextProps: InputProps) {
+    UNSAFE_componentWillReceiveProps (nextProps: InputProps) {
         const { code } = this.props
         if (nextProps.code !== code) {
             this.setState({ digits: codeToArray(nextProps.code) })
         }
     }
 
-    componentDidMount() {
+    componentDidMount () {
         this.copyCodeFromClipBoardOnAndroid()
         this.bringUpKeyBoardIfNeeded()
         this.keyboardDidHideListener = Keyboard.addListener('keyboardDidHide', this.handleKeyboardDidHide)
     }
 
-    componentWillUnmount() {
+    componentDidUpdate (prevProps, prevState) {
+        if (prevState.text !== this.state.text) {
+            const { pinCount } = this.props;
+            const text = this.state.text;
+            const index = text.length - 1;
+            if (text.length === pinCount) {
+                this.handleChangeText(index, text)
+            }
+        }
+    }
+
+    componentWillUnmount () {
         if (this.timer) {
             clearInterval(this.timer)
         }
@@ -125,7 +137,7 @@ export default class OTPInputView extends Component<InputProps, OTPInputViewStat
                 }
             } else {
                 text.split("").forEach((value) => {
-                    if(index < pinCount) {
+                    if (index < pinCount) {
                         newdigits[index] = value;
                         index += 1;
                     }
@@ -195,10 +207,10 @@ export default class OTPInputView extends Component<InputProps, OTPInputViewStat
                     style={selectedIndex === index ? [defaultTextFieldStyle, codeInputFieldStyle, codeInputHighlightStyle] : [defaultTextFieldStyle, codeInputFieldStyle]}
                     ref={ref => { this.fields[index] = ref }}
                     onChangeText={text => {
-                        this.handleChangeText(index, text)
+                        this.setState({ text })
                     }}
                     onKeyPress={({ nativeEvent: { key } }) => { this.handleKeyPressTextInput(index, key) }}
-                    value={ !clearInputs ? digits[index]: "" }
+                    value={!clearInputs ? digits[index] : ""}
                     keyboardAppearance={keyboardAppearance}
                     keyboardType={keyboardType}
                     textContentType={isAutoFillSupported ? "oneTimeCode" : "none"}
@@ -219,7 +231,7 @@ export default class OTPInputView extends Component<InputProps, OTPInputViewStat
         return array.map(this.renderOneInputField)
     }
 
-    render() {
+    render () {
         const { pinCount, style, clearInputs } = this.props
         const digits = this.getDigits()
         return (
